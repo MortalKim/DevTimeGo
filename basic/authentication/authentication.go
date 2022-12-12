@@ -1,7 +1,9 @@
 package authentication
 
 import (
+	"WakaTImeGo/service/userService"
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -26,17 +28,34 @@ func MD5(data []byte) string {
 
 func Authorize() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		username := c.Query("username")
-		ts := c.Query("ts")
+		//username := c.Query("username")
+		//ts := c.Query("ts")
 		token := c.Request.Header.Get("Authorization")
+		//judge token prefix is "basic"
+		if strings.HasPrefix(token, "Basic") {
+			//get string after "basic "
+			token = strings.TrimPrefix(token, "Basic ")
+			decodeToken, _ := base64.StdEncoding.DecodeString(token)
+			//Get userService by token
+			_, err := userService.GetUserByApiKey(string(decodeToken))
 
-		if strings.ToLower(MD5([]byte(username+ts+TokenSalt))) == strings.ToLower(token) {
+			if err != nil {
+				c.AbortWithStatus(http.StatusUnauthorized)
+				return
+			}
 			c.Next()
 		} else {
-			c.Abort()
-			c.JSON(http.StatusUnauthorized, gin.H{"message": "访问未授权"})
+			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
+
+		//if strings.ToLower(MD5([]byte(username+ts+TokenSalt))) == strings.ToLower(token) {
+		//	c.Next()
+		//} else {
+		//	c.Abort()
+		//	c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+		//	return
+		//}
 	}
 }
 

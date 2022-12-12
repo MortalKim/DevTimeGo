@@ -75,3 +75,10 @@ func GetUserByID(id string) (User, error) {
 	}
 	return user, nil
 }
+
+func GetUserByApiKey(apiKey string) (User, error) {
+	var user User
+	db := database.GetDb()
+	err := db.Where("api_key = ?", apiKey).First(&user).Error
+	return user, err
+}

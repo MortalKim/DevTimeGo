@@ -7,7 +7,7 @@ import (
 	"WakaTImeGo/config"
 	"WakaTImeGo/router"
 	"WakaTImeGo/service/heartbeat"
-	"WakaTImeGo/service/user"
+	"WakaTImeGo/service/userService"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -24,14 +24,12 @@ func main() {
 
 func initDatabase() {
 	database.InitDatabase()
-	user.InitDatabase()
+	userService.InitDatabase()
 	heartbeat.InitDatabase()
 }
 
 func initRoute() {
 	r := gin.Default()
-
-	router.InitRotes()
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -45,7 +43,10 @@ func initRoute() {
 
 	//#region Some api need authentication
 	r.Use(authentication.Authorize())
-	r.GET("/service_with_auth", authentication.ServiceWithAuth)
+
+	router.InitRotesNeedAuth(r)
+
+	//r.GET("/service_with_auth", authentication.ServiceWithAuth)
 	//#endregion Some api need authentication
 
 	r.Run()

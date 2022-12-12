@@ -8,7 +8,7 @@ import (
 type Heartbeat struct {
 	ID              uint64    `gorm:"primary_key" hash:"ignore"`
 	User            *User     `json:"-" gorm:"not null; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" hash:"ignore"`
-	UserID          string    `json:"-" gorm:"not null; index:idx_time_user; index:idx_user_project"` // idx_user_project is for quickly fetching a user's project list (settings page)
+	UserID          string    `json:"-" gorm:"not null; index:idx_time_user; index:idx_user_project"` // idx_user_project is for quickly fetching a userService's project list (settings page)
 	Entity          string    `json:"entity" gorm:"not null"`
 	Type            string    `json:"type" gorm:"size:255"`
 	Category        string    `json:"category" gorm:"size:255"`
@@ -27,7 +27,7 @@ type Heartbeat struct {
 	CreatedAt       time.Time `json:"created_at" gorm:"type:timestamp(3)" hash:"ignore"` // https://gorm.io/docs/conventions.html#CreatedAt
 }
 
-//Add heartbeat to database
+// Add heartbeat to database
 func (heartbeat *Heartbeat) Add() error {
 	db := database.GetDb()
 	err := db.Create(heartbeat).Error

@@ -1,4 +1,4 @@
-package user
+package userService
 
 import (
 	"WakaTImeGo/model/entity"
@@ -28,4 +28,9 @@ func CreateAdminUser() {
 	if err != nil {
 		return
 	}
+}
+
+// GetUserByApiKey Get userService by ApiKey
+func GetUserByApiKey(apiKey string) (entity.User, error) {
+	return entity.GetUserByApiKey(apiKey)
 }
