@@ -2,18 +2,23 @@ package entity
 
 import (
 	"WakaTImeGo/basic/database"
+	"gorm.io/gorm"
 	"time"
 )
+
 import _ "github.com/jinzhu/gorm"
 import _ "github.com/go-sql-driver/mysql"
 
 type User struct {
+	gorm.Model
 	ID                string    `json:"id" gorm:"primary_key"`
 	ApiKey            string    `json:"api_key" gorm:"unique; default:NULL"`
+	UserName          string    `json:"user_name" gorm:"default:NULL"`
 	Email             string    `json:"email" gorm:"index:idx_user_email; size:255"`
+	Birthday          time.Time `json:"birthday" gorm:"default:NULL"`
+	Gender            string    `json:"gender" gorm:"default:NULL"`
 	Location          string    `json:"location"`
 	Password          string    `json:"-"`
-	CreatedAt         time.Time `gorm:"type:timestamp; default:CURRENT_TIMESTAMP" swaggertype:"string" format:"date" example:"2006-01-02 15:04:05.000"`
 	LastLoggedInAt    time.Time `gorm:"type:timestamp; default:CURRENT_TIMESTAMP" swaggertype:"string" format:"date" example:"2006-01-02 15:04:05.000"`
 	ShareDataMaxDays  int       `json:"-" gorm:"default:0"`
 	ShareEditors      bool      `json:"-" gorm:"default:false; type:bool"`
@@ -26,12 +31,11 @@ type User struct {
 	HasData           bool      `json:"-" gorm:"default:false; type:bool"`
 	WakatimeApiKey    string    `json:"-"`
 	WakatimeApiUrl    string    `json:"-"`
-	SyncApiKey        string    `json:"-"` // api key for sync data
 	ReportsWeekly     bool      `json:"-" gorm:"default:false; type:bool"`
 	PublicLeaderboard bool      `json:"-" gorm:"default:false; type:bool"`
 }
 
-// Add add a user to database
+// Add add a userController to database
 func (user *User) Add() error {
 	db := database.GetDb()
 	err := db.Create(user).Error
@@ -41,7 +45,7 @@ func (user *User) Add() error {
 	return nil
 }
 
-// Del delete a user form database
+// Del delete a userController form database
 func (user *User) Del() error {
 	db := database.GetDb()
 	err := db.Delete(user).Error
@@ -51,7 +55,7 @@ func (user *User) Del() error {
 	return nil
 }
 
-// Update update a user in database
+// Update update a userController in database
 func (user *User) Update() error {
 	db := database.GetDb()
 	err := db.Save(user).Error
@@ -61,7 +65,7 @@ func (user *User) Update() error {
 	return nil
 }
 
-// GetUserByID get a user by id
+// GetUserByID get a userController by id
 func GetUserByID(id string) (User, error) {
 	var user User
 	db := database.GetDb()

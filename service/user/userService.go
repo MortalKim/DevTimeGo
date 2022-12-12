@@ -1,7 +1,7 @@
-package service
+package user
 
 import (
-	"WakaTImeGo/user/entity"
+	"WakaTImeGo/model/entity"
 	"WakaTImeGo/utils/bcrypt"
 )
 import "WakaTImeGo/basic/database"
@@ -16,14 +16,14 @@ func InitDatabase() {
 	CreateAdminUser()
 }
 
-// CreateAdminUser create user named admin
+// CreateAdminUser create userController named admin
 func CreateAdminUser() {
 	var user entity.User
-	user.ID = "admin"
+	user.UserName = "admin"
 	user.Email = "admin@admin"
 	user.Password, _ = bcrypt.PwdHash("admin")
 	user.IsAdmin = true
-	user.SyncApiKey = uuid.New().String()
+	user.ApiKey = uuid.New().String()
 	err := user.Add()
 	if err != nil {
 		return
