@@ -3,6 +3,7 @@ package main
 import (
 	"WakaTImeGo/basic/authentication"
 	"WakaTImeGo/basic/database"
+	"WakaTImeGo/basic/redis"
 	"WakaTImeGo/config"
 	"WakaTImeGo/user/service"
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,7 @@ func main() {
 	config.InitConfig()
 	database.InitDatabase()
 	service.InitDatabase()
+	redis.Setup()
 	initRoute()
 }
 

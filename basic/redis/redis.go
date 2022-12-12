@@ -5,8 +5,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"github.com/sirupsen/logrus"
 	"time"
 )
+
+var log = logrus.New()
 
 var (
 	MyRedis *redis.Client
@@ -23,10 +26,10 @@ func Setup() {
 	})
 	_, err := MyRedis.Ping(context.Background()).Result()
 	if err != nil {
-		logging.Error("Redis connect ping failed, err:", err)
+		log.Error("Redis connect ping failed, err:", err)
 		return
 	}
-	logging.Error("Redis connect succeeded")
+	log.Info("Redis connect succeeded")
 	return
 }
 
