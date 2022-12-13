@@ -66,7 +66,6 @@ func SaveHeartbeats(c *gin.Context) {
 		err := h.Add()
 		if err != nil {
 			log.Error(err)
-			return
 		} else {
 			//make response
 			r := make([]interface{}, 2)

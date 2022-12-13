@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -29,8 +30,6 @@ func MD5(data []byte) string {
 
 func Authorize() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//username := c.Query("username")
-		//ts := c.Query("ts")
 		token := c.Request.Header.Get("Authorization")
 		//judge token prefix is "basic"
 		if strings.HasPrefix(token, "Basic") {
@@ -44,7 +43,7 @@ func Authorize() gin.HandlerFunc {
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
-			c.Request.Header.Add(constant.DECRYPTED_USER_ID, user.ID)
+			c.Request.Header.Add(constant.DECRYPTED_USER_ID, strconv.Itoa(int(user.ID)))
 			c.Next()
 		} else {
 			c.AbortWithStatus(http.StatusUnauthorized)

@@ -10,8 +10,11 @@ import _ "github.com/jinzhu/gorm"
 import _ "github.com/go-sql-driver/mysql"
 
 type User struct {
-	gorm.Model
-	ID                string    `json:"id" gorm:"primary_key"`
+	ID        uint           `json:"id" gorm:"primary_key;auto_increment"`
+	CreatedAt time.Time      `json:"created_at" gorm:"type:timestamp;default:CURRENT_TIMESTAMP"`
+	UpdatedAt time.Time      `json:"updated_at" gorm:"type:timestamp;default:NULL"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"type:timestamp;default:NULL"`
+
 	ApiKey            string    `json:"api_key" gorm:"unique; default:NULL"`
 	UserName          string    `json:"user_name" gorm:"default:NULL"`
 	Email             string    `json:"email" gorm:"index:idx_user_email; size:255"`

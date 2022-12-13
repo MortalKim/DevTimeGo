@@ -12,3 +12,10 @@ func InitDatabase() {
 		return
 	}
 }
+
+// GetHeartbeatByTime Get heartbeat form start to end time
+func GetHeartbeatByTime(startTime, endTime string) []entity.Heartbeat {
+	var heartbeats []entity.Heartbeat
+	database.GetDb().Where("time >= ? AND time <= ?", startTime, endTime).Find(&heartbeats)
+	return heartbeats
+}
