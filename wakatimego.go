@@ -3,6 +3,7 @@ package main
 import (
 	"WakaTImeGo/basic/authentication"
 	"WakaTImeGo/basic/database"
+	"WakaTImeGo/basic/json"
 	"WakaTImeGo/basic/redis"
 	"WakaTImeGo/config"
 	"WakaTImeGo/router"
@@ -17,9 +18,14 @@ var log = logrus.New()
 
 func main() {
 	config.InitConfig()
+	initCustomJsonDecoder()
 	initDatabase()
 	redis.Setup()
 	initRoute()
+}
+
+func initCustomJsonDecoder() {
+	json.RegisterTimeDecoderFunc()
 }
 
 func initDatabase() {

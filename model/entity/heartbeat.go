@@ -2,11 +2,13 @@ package entity
 
 import (
 	"WakaTImeGo/basic/database"
+	"crypto/md5"
+	"encoding/hex"
 	"time"
 )
 
 type Heartbeat struct {
-	ID              uint64    `gorm:"primary_key" hash:"ignore"`
+	ID              uint64    `json:"-" gorm:"primary_key; auto_increment"`
 	User            *User     `json:"-" gorm:"not null; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" hash:"ignore"`
 	UserID          string    `json:"-" gorm:"not null; index:idx_time_user; index:idx_user_project"` // idx_user_project is for quickly fetching a userService's project list (settings page)
 	Entity          string    `json:"entity" gorm:"not null"`
@@ -35,4 +37,10 @@ func (heartbeat *Heartbeat) Add() error {
 		return err
 	}
 	return nil
+}
+
+func (heartbeat *Heartbeat) HashSelf() {
+	md := md5.New()
+	md.Write([]byte(heartbeat.UserID + heartbeat.Time.String() + heartbeat.Entity + heartbeat.Type + heartbeat.Category + heartbeat.Project + heartbeat.Branch + heartbeat.Language + heartbeat.Editor + heartbeat.OperatingSystem + heartbeat.Machine + heartbeat.UserAgent))
+	heartbeat.Hash = hex.EncodeToString(md.Sum(nil))[8:24]
 }

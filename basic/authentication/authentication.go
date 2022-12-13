@@ -1,6 +1,7 @@
 package authentication
 
 import (
+	"WakaTImeGo/basic/constant"
 	"WakaTImeGo/service/userService"
 	"crypto/md5"
 	"encoding/base64"
@@ -37,12 +38,13 @@ func Authorize() gin.HandlerFunc {
 			token = strings.TrimPrefix(token, "Basic ")
 			decodeToken, _ := base64.StdEncoding.DecodeString(token)
 			//Get userService by token
-			_, err := userService.GetUserByApiKey(string(decodeToken))
+			user, err := userService.GetUserByApiKey(string(decodeToken))
 
 			if err != nil {
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
+			c.Request.Header.Add(constant.DECRYPTED_USER_ID, user.ID)
 			c.Next()
 		} else {
 			c.AbortWithStatus(http.StatusUnauthorized)
