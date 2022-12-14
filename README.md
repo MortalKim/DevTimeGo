@@ -1,4 +1,4 @@
-# WakaTimeGo
+# DevTimeGo
 A third party WakaTime server by GO
 
 Will be separated of front-end and back-end to make it more flexible and easy to extend.
