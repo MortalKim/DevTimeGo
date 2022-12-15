@@ -4,6 +4,7 @@ import (
 	"WakaTImeGo/basic/constant"
 	"WakaTImeGo/model/entity"
 	"WakaTImeGo/model/entity/wakatime/v1/response"
+	"WakaTImeGo/task"
 	"WakaTImeGo/utils"
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
@@ -22,12 +23,47 @@ var log = logrus.New()
 
 // SaveHeartbeat save heartbeat
 func SaveHeartbeat(c *gin.Context) {
-	var heartbeat []entity.Heartbeat
-	err := c.BindJSON(&heartbeat)
+	//get heartbeats data
+	var heartbeats entity.Heartbeat
+	data, err := c.GetRawData()
+
+	//use custom jsoniter to parse data
+	var json = jsoniter.ConfigCompatibleWithStandardLibrary
+	err = json.Unmarshal(data, &heartbeats)
+
 	if err != nil {
+		c.JSON(500, gin.H{"status": "error", "message": err.Error()})
 		return
 	}
-	log.Error(heartbeat)
+	log.Info(heartbeats)
+
+	//get machine info
+	machineName := c.Request.Header.Get("X-Machine-Name")
+	//get user info by token
+	userId := c.Request.Header.Get(constant.DECRYPTED_USER_ID)
+	//get user agent
+	userAgent := c.Request.Header.Get("User-Agent")
+	//get os info and editor info
+	opSys, editor, _ := utils.ParseUserAgent(userAgent)
+
+	res := response.HeartbeatBulkResponse{}
+	heartbeats.UserID = userId
+	heartbeats.OperatingSystem = opSys
+	heartbeats.Editor = editor
+	heartbeats.Machine = machineName
+	heartbeats.HashSelf()
+	err2 := heartbeats.Add()
+	if err2 != nil {
+		log.Error(err)
+	} else {
+		//make response
+		r := make([]interface{}, 2)
+		r[0] = nil
+		r[1] = http.StatusCreated
+		res.Responses = append(res.Responses, r)
+	}
+
+	c.JSON(http.StatusCreated, res)
 }
 
 // SaveHeartbeats save heartbeats bulk
@@ -74,5 +110,6 @@ func SaveHeartbeats(c *gin.Context) {
 			res.Responses = append(res.Responses, r)
 		}
 	}
+	task.NewDurationDeliveryTask(userId)
 	c.JSON(http.StatusCreated, res)
 }

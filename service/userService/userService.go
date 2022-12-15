@@ -18,15 +18,20 @@ func InitDatabase() {
 
 // CreateAdminUser create userController named admin
 func CreateAdminUser() {
-	var user entity.User
-	user.UserName = "admin"
-	user.Email = "admin@admin"
-	user.Password, _ = bcrypt.PwdHash("admin")
-	user.IsAdmin = true
-	user.ApiKey = uuid.New().String()
-	err := user.Add()
+	//check if user admin is exist
+	_, err := entity.GetUserByID("1")
+	//if not exist, create it
 	if err != nil {
-		return
+		var user entity.User
+		user.UserName = "admin"
+		user.Email = "admin@admin"
+		user.Password, _ = bcrypt.PwdHash("admin")
+		user.IsAdmin = true
+		user.ApiKey = uuid.New().String()
+		err := user.Add()
+		if err != nil {
+			return
+		}
 	}
 }
 

@@ -24,6 +24,14 @@ func GetRedisConfig() (host, password string, port, db int) {
 	return host, password, port, db
 }
 
+func GetTaskRedisConfig() (host, password string, port, db int) {
+	host = viper.GetString("redis.host")
+	port = viper.GetInt("redis.port")
+	password = viper.GetString("redis.password")
+	db = viper.GetInt("redis.taskDb")
+	return host, password, port, db
+}
+
 func GetDatabaseConfig() (host, username, password, dbname string, port string) {
 	host = viper.GetString("database.host")
 	port = viper.GetString("database.port")

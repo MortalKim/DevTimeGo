@@ -7,8 +7,10 @@ import (
 	"WakaTImeGo/basic/redis"
 	"WakaTImeGo/config"
 	"WakaTImeGo/router"
+	"WakaTImeGo/service/duration"
 	"WakaTImeGo/service/heartbeat"
 	"WakaTImeGo/service/userService"
+	"WakaTImeGo/task"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -21,6 +23,7 @@ func main() {
 	initCustomJsonDecoder()
 	initDatabase()
 	redis.Setup()
+	go task.InitTaskService()
 	initRoute()
 }
 
@@ -32,6 +35,8 @@ func initDatabase() {
 	database.InitDatabase()
 	userService.InitDatabase()
 	heartbeat.InitDatabase()
+	database.InitDatabase()
+	duration.InitDatabase()
 }
 
 func initRoute() {

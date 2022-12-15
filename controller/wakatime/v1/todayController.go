@@ -24,8 +24,8 @@ func GetToday(c *gin.Context) {
 	heartbeats := heartbeat.GetHeartbeatByTime(start, end)
 	logger.Info(heartbeats)
 
-	todayData := wakatime.Today{}
-	todayData.Data = wakatime.TodayData{}
+	todayData := wakatime.Summary{}
+	todayData.Data = wakatime.SummaryData{}
 	todayData.Data.GrandTotal = wakatime.GrandTotal{
 		Digital:      "100 h",
 		Hours:        1,
