@@ -21,3 +21,9 @@ func GetHeartbeatByTime(startTime, endTime string) []entity.Heartbeat {
 
 	return heartbeats
 }
+
+func GetHeartbeatsNotCountedByUser(userID string) []entity.Heartbeat {
+	var heartbeats []entity.Heartbeat
+	database.GetDb().Where("user_id = ? AND is_counted = ?", userID, false).Find(&heartbeats)
+	return heartbeats
+}

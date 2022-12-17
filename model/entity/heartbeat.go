@@ -24,6 +24,7 @@ type Heartbeat struct {
 	UserAgent       string    `json:"user_agent" hash:"ignore" gorm:"type:varchar(255)"`
 	Time            time.Time `json:"time" gorm:"type:timestamp(3); index:idx_time; index:idx_time_user" swaggertype:"primitive,number"`
 	Hash            string    `json:"-" gorm:"type:varchar(17); uniqueIndex"`
+	IsCounted       bool      `json:"-" gorm:"column:is_counted; default:false"` // whether this heartbeat has been counted in the user's duration
 	Origin          string    `json:"-" hash:"ignore" gorm:"type:varchar(255)"`
 	OriginId        string    `json:"-" hash:"ignore" gorm:"type:varchar(255)"`
 	CreatedAt       time.Time `json:"created_at" gorm:"type:timestamp(3)" hash:"ignore"` // https://gorm.io/docs/conventions.html#CreatedAt
@@ -43,4 +44,14 @@ func (heartbeat *Heartbeat) HashSelf() {
 	md := md5.New()
 	md.Write([]byte(heartbeat.UserID + heartbeat.Time.String() + heartbeat.Entity + heartbeat.Type + heartbeat.Category + heartbeat.Project + heartbeat.Branch + heartbeat.Language + heartbeat.Editor + heartbeat.OperatingSystem + heartbeat.Machine + heartbeat.UserAgent))
 	heartbeat.Hash = hex.EncodeToString(md.Sum(nil))[8:24]
+}
+
+// Update update heartbeat
+func (heartbeat *Heartbeat) Update() error {
+	db := database.GetDb()
+	err := db.Save(heartbeat).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
