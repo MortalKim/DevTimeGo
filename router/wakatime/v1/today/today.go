@@ -2,7 +2,7 @@ package today
 
 import (
 	"WakaTImeGo/basic/authentication"
-	"WakaTImeGo/basic/constant"
+	"WakaTImeGo/constant"
 	todayController "WakaTImeGo/controller/wakatime/v1"
 	"github.com/gin-gonic/gin"
 )

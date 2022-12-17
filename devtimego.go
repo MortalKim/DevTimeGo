@@ -2,6 +2,7 @@ package main
 
 import (
 	"WakaTImeGo/basic/authentication"
+	"WakaTImeGo/basic/cors"
 	"WakaTImeGo/basic/database"
 	"WakaTImeGo/basic/json"
 	"WakaTImeGo/basic/redis"
@@ -41,7 +42,7 @@ func initDatabase() {
 
 func initRoute() {
 	r := gin.Default()
-
+	r.Use(cors.Cors())
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
@@ -50,6 +51,7 @@ func initRoute() {
 
 	//#region Some api do not need authentication
 	r.GET("/service_without_auth", authentication.ServiceWithoutAuth)
+	router.InitRotesNotNeedAuth(r)
 	//#endregion Some api do not need authentication
 
 	//#region Some api need authentication

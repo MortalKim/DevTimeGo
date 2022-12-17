@@ -79,6 +79,28 @@ func GetUserByID(id string) (User, error) {
 	return user, nil
 }
 
+// GetUserByEmail get a userController by email
+func GetUserByEmail(email string) (User, error) {
+	var user User
+	db := database.GetDb()
+	err := db.Where("email = ?", email).First(&user).Error
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
+// GetUserByUserName get a userController by username
+func GetUserByUserName(username string) (User, error) {
+	var user User
+	db := database.GetDb()
+	err := db.Where("user_name = ?", username).First(&user).Error
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 func GetUserByApiKey(apiKey string) (User, error) {
 	var user User
 	db := database.GetDb()

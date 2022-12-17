@@ -1,12 +1,13 @@
 package v1
 
 import (
-	"WakaTImeGo/basic/constant"
+	"WakaTImeGo/constant"
 	"WakaTImeGo/model/entity"
 	"WakaTImeGo/model/entity/wakatime/v1/response"
 	"WakaTImeGo/task"
 	"WakaTImeGo/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/go-sql-driver/mysql"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -100,9 +101,21 @@ func SaveHeartbeats(c *gin.Context) {
 		h.Machine = machineName
 		h.HashSelf()
 		err := h.Add()
+		success := true
 		if err != nil {
+			if _, ok := err.(*mysql.MySQLError); ok {
+				//if duplicate key error, skip, or else return error
+				if err.(*mysql.MySQLError).Number != 1062 {
+					success = false
+				}
+			} else {
+				success = false
+			}
+
 			log.Error(err)
-		} else {
+		}
+
+		if success {
 			//make response
 			r := make([]interface{}, 2)
 			r[0] = nil

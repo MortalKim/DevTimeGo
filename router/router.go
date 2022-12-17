@@ -9,7 +9,11 @@ import (
 
 func InitRotesNeedAuth(engine *gin.Engine) {
 	//init userController router
-	userRouter.InitUserRoutes()
+	userRouter.InitUserRoutesNeedAuth(engine)
 	today.InitTodayRoutes(engine)
 	heartbeat.InitHeartbeatRoutes(engine)
+}
+
+func InitRotesNotNeedAuth(engine *gin.Engine) {
+	userRouter.InitUserRoutesNotNeedAuth(engine)
 }

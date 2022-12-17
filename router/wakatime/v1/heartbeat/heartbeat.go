@@ -1,7 +1,7 @@
 package heartbeat
 
 import (
-	"WakaTImeGo/basic/constant"
+	"WakaTImeGo/constant"
 	"WakaTImeGo/controller/wakatime/v1"
 	"github.com/gin-gonic/gin"
 )

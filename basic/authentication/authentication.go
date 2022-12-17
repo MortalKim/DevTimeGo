@@ -1,7 +1,7 @@
 package authentication
 
 import (
-	"WakaTImeGo/basic/constant"
+	"WakaTImeGo/constant"
 	"WakaTImeGo/service/userService"
 	"crypto/md5"
 	"encoding/base64"
