@@ -17,7 +17,7 @@ import (
 var taskClient *asynq.Client
 
 func InitTaskService() {
-	redisHost, redisPasswd, redisPort, redisDb := config.GetRedisConfig()
+	redisHost, redisPasswd, redisPort, redisDb := config.GetTaskRedisConfig()
 
 	taskServer := asynq.NewServer(
 		asynq.RedisClientOpt{

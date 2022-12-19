@@ -7,6 +7,7 @@ func InitUserRoutesNeedAuth(r *gin.Engine) {
 	//init userController router
 	user := r.Group("/user")
 	{
+		user.POST("/auth", userController.Auth)
 		user.GET("/info", userController.GetUserInfo)
 		user.PUT("/info", userController.UpdateUserInfo)
 		user.PUT("/password", userController.UpdatePassword)

@@ -1,12 +1,21 @@
 package userController
 
 import (
+	"WakaTImeGo/config"
+	"WakaTImeGo/model/entity"
 	"WakaTImeGo/model/entity/request"
+	"WakaTImeGo/model/entity/response"
 	"WakaTImeGo/model/response/base"
 	"WakaTImeGo/service/userService"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	"net/http"
+	"time"
 )
+
+func Auth(c *gin.Context) {
+	c.JSON(http.StatusOK, nil)
+}
 
 func Login(c *gin.Context) {
 	var userReq request.UserRegister
@@ -27,9 +36,26 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, res)
 		return
 	}
+	jwtStruct := entity.JwtStruct{
+		UserID: user.ID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: &jwt.NumericDate{
+				Time: time.Now().Add(time.Hour * 24 * 7),
+			},
+			Issuer: "DevTimeGO",
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwtStruct)
+	signedString, err := token.SignedString([]byte(config.JWT_SECRET))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, nil)
+		return
+	}
 	res.Code = http.StatusOK
 	res.Message = "login success"
-	res.Data = user
+	res.Data = response.LoginResponse{
+		Token: signedString,
+	}
 	c.JSON(http.StatusOK, res)
 }
 

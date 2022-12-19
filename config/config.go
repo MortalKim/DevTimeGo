@@ -5,6 +5,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var JWT_SECRET = ""
+
 func InitConfig() {
 	viper.AddConfigPath("./")
 	viper.SetConfigName("app")
@@ -12,6 +14,7 @@ func InitConfig() {
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err)
 	}
+	JWT_SECRET = getJwtSecret()
 	runMode := viper.GetString("runmode")
 	log.Info("Run mode: ", runMode)
 }
@@ -39,4 +42,8 @@ func GetDatabaseConfig() (host, username, password, dbname string, port string) 
 	password = viper.GetString("database.password")
 	dbname = viper.GetString("database.dbname")
 	return host, username, password, dbname, port
+}
+
+func getJwtSecret() string {
+	return viper.GetString("jwt_secret")
 }

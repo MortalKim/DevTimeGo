@@ -1,12 +1,15 @@
 package authentication
 
 import (
+	"WakaTImeGo/config"
 	"WakaTImeGo/constant"
+	"WakaTImeGo/model/entity"
 	"WakaTImeGo/service/userService"
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"strconv"
 	"strings"
@@ -32,7 +35,7 @@ func Authorize() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("Authorization")
 		//judge token prefix is "basic"
-		if strings.HasPrefix(token, "Basic") {
+		if strings.HasPrefix(token, "Basic ") {
 			//get string after "basic "
 			token = strings.TrimPrefix(token, "Basic ")
 			decodeToken, _ := base64.StdEncoding.DecodeString(token)
@@ -45,6 +48,19 @@ func Authorize() gin.HandlerFunc {
 			}
 			c.Request.Header.Add(constant.DECRYPTED_USER_ID, strconv.Itoa(int(user.ID)))
 			c.Next()
+		} else if strings.HasPrefix(token, "Bearer ") {
+			token = strings.TrimPrefix(token, "Bearer ")
+			jwtStruct := entity.JwtStruct{}
+			token, err := jwt.ParseWithClaims(token, &jwtStruct, func(token *jwt.Token) (i interface{}, err error) {
+				return []byte(config.JWT_SECRET), nil
+			})
+			if err != nil {
+				c.AbortWithStatus(http.StatusUnauthorized)
+				return
+			}
+			if _, ok := token.Claims.(*entity.JwtStruct); ok && token.Valid {
+				c.Next()
+			}
 		} else {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
