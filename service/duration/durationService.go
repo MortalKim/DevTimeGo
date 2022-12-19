@@ -39,7 +39,8 @@ func GenericUserDuration(userID string) {
 			mHeartbeat.Language == lastDuration.Language && mHeartbeat.Editor == lastDuration.Editor &&
 			mHeartbeat.OperatingSystem == lastDuration.OperatingSystem &&
 			mHeartbeat.Machine == lastDuration.Machine &&
-			mHeartbeat.Branch == lastDuration.Branch {
+			mHeartbeat.Branch == lastDuration.Branch &&
+			mHeartbeat.Category == lastDuration.Category {
 			//if mHeartbeat is in last duration, then update last duration
 			//Duration is the sum of all heartbeats in it. so it is the last mHeartbeat's time minus the first mHeartbeat's time.
 			//To make last mHeartbeat have effect, so add 2 minutes to it.
@@ -56,6 +57,7 @@ func GenericUserDuration(userID string) {
 				UserID:          userID,
 				Time:            mHeartbeat.Time,
 				Duration:        2 * time.Minute,
+				Category:        mHeartbeat.Category,
 				Project:         mHeartbeat.Project,
 				Language:        mHeartbeat.Language,
 				Editor:          mHeartbeat.Editor,
@@ -73,12 +75,20 @@ func GenericUserDuration(userID string) {
 			isValid = true
 		}
 		mHeartbeat.IsCounted = true
+		mHeartbeat.DurationId = lastDuration.ID
 		err := mHeartbeat.Update()
 		if err != nil {
 			log.Error(err)
 			return
 		}
 	}
+	log.Info("Generic user's duration success")
+}
+
+func GetDurationByTime(userID string, startTime, endTime time.Time) []entity.Duration {
+	var durations []entity.Duration
+	database.GetDb().Where("user_id = ? AND time >= ? AND time <= ?", userID, startTime, endTime).Find(&durations)
+	return durations
 }
 
 // get user's last duration

@@ -16,7 +16,7 @@ type Summary struct {
 
 type SummaryData struct {
 	Categories       []SummaryItem `json:"categories"`
-	Dependencies     []SummaryItem `json:"dependencies"`
+	Dependencies     []SummaryItem `json:"dependencies"` //not used for now
 	Editors          []SummaryItem `json:"editors"`
 	GrandTotal       GrandTotal    `json:"grand_total"`
 	Languages        []SummaryItem `json:"languages"`
@@ -43,6 +43,7 @@ type GrandTotal struct {
 	Digital      string  `json:"digital"`
 	Hours        int     `json:"hours"`
 	Minutes      int     `json:"minutes"`
+	Seconds      int     `json:"seconds"`
 	Text         string  `json:"text"`
 	TotalSeconds float64 `json:"total_seconds"`
 }

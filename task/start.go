@@ -31,7 +31,7 @@ func InitTaskService() {
 
 		asynq.Config{
 			// Specify how many concurrent workers to use
-			Concurrency: 10,
+			Concurrency: 1,
 			// Optionally specify multiple queues with different priority.
 			Queues: map[string]int{
 				"critical": 6,

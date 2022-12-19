@@ -1,7 +1,6 @@
-package today
+package v1
 
 import (
-	"WakaTImeGo/basic/authentication"
 	"WakaTImeGo/constant"
 	todayController "WakaTImeGo/controller/wakatime/v1"
 	"github.com/gin-gonic/gin"
@@ -15,7 +14,6 @@ import (
  */
 
 func InitTodayRoutes(engine *gin.Engine) {
-	engine.GET("/service_with_auth", authentication.ServiceWithAuth)
 	//init userController router
 	today := engine.Group(constant.API_V1_PREFIX)
 	{

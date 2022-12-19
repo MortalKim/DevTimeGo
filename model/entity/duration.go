@@ -24,6 +24,7 @@ type Duration struct {
 	UserID          string        `json:"user_id" gorm:"not null; index:idx_time_user; index:idx_user_project"`
 	Time            time.Time     `json:"time" hash:"ignore"`
 	Duration        time.Duration `json:"duration" hash:"ignore"`
+	Category        string        `json:"category" hash:"ignore"`
 	Project         string        `json:"project"`
 	Language        string        `json:"language"`
 	Editor          string        `json:"editor"`
@@ -33,7 +34,7 @@ type Duration struct {
 	NumHeartbeats   int           `json:"-" hash:"ignore"`
 }
 
-//Add a new Duration to database
+// Add a new Duration to database
 func (d *Duration) Add() error {
 	db := database.GetDb()
 	err := db.Create(d).Error
@@ -43,7 +44,7 @@ func (d *Duration) Add() error {
 	return nil
 }
 
-//Update a Duration in database
+// Update a Duration in database
 func (d *Duration) Update() error {
 	db := database.GetDb()
 	err := db.Save(d).Error

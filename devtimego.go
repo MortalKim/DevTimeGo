@@ -56,7 +56,7 @@ func initRoute() {
 
 	//#region Some api need authentication
 	r.Use(authentication.Authorize())
-
+	r.GET("/service_with_auth", authentication.ServiceWithAuth)
 	router.InitRotesNeedAuth(r)
 
 	//r.GET("/service_with_auth", authentication.ServiceWithAuth)

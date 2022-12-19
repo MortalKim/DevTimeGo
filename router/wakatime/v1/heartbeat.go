@@ -1,4 +1,4 @@
-package heartbeat
+package v1
 
 import (
 	"WakaTImeGo/constant"

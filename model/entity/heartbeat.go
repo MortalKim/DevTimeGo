@@ -24,7 +24,8 @@ type Heartbeat struct {
 	UserAgent       string    `json:"user_agent" hash:"ignore" gorm:"type:varchar(255)"`
 	Time            time.Time `json:"time" gorm:"type:timestamp(3); index:idx_time; index:idx_time_user" swaggertype:"primitive,number"`
 	Hash            string    `json:"-" gorm:"type:varchar(17); uniqueIndex"`
-	IsCounted       bool      `json:"-" gorm:"column:is_counted; default:false"` // whether this heartbeat has been counted in the user's duration
+	IsCounted       bool      `json:"-" gorm:"column:is_counted; default:false"`                    // whether this heartbeat has been counted in the user's duration
+	DurationId      uint64    `json:"duration_id" gorm:"column:duration_id; index:idx_duration_id"` // the duration this heartbeat belongs to, if duration generated
 	Origin          string    `json:"-" hash:"ignore" gorm:"type:varchar(255)"`
 	OriginId        string    `json:"-" hash:"ignore" gorm:"type:varchar(255)"`
 	CreatedAt       time.Time `json:"created_at" gorm:"type:timestamp(3)" hash:"ignore"` // https://gorm.io/docs/conventions.html#CreatedAt

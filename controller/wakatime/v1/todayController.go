@@ -1,8 +1,9 @@
 package v1
 
 import (
+	"WakaTImeGo/constant"
 	wakatime "WakaTImeGo/model/entity/wakatime/v1"
-	"WakaTImeGo/service/heartbeat"
+	"WakaTImeGo/service/summaryService"
 	"WakaTImeGo/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -19,10 +20,10 @@ import (
 var logger = logrus.New()
 
 func GetToday(c *gin.Context) {
-	//get today's heartbeat
-	start, end := utils.GetDayTimeString(time.Now())
-	heartbeats := heartbeat.GetHeartbeatByTime(start, end)
-	logger.Info(heartbeats)
+	userId := c.Request.Header.Get(constant.DECRYPTED_USER_ID)
+	//get today's time
+	start, end := utils.GetDayTime(time.Now())
+	summary := summaryService.GetSummaryByTimeRange(userId, start, end)
 
 	todayData := wakatime.Summary{}
 	todayData.Data = wakatime.SummaryData{}
@@ -40,5 +41,5 @@ func GetToday(c *gin.Context) {
 		Text:     "100 h",
 		Timezone: "100 h",
 	}
-	c.JSON(http.StatusOK, todayData)
+	c.JSON(http.StatusOK, summary)
 }
