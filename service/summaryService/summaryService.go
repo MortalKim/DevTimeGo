@@ -19,7 +19,7 @@ import (
 
 // GetSummaryByTimeRange summary service
 func GetSummaryByTimeRange(userId string, start, end time.Time) v1.Summary {
-	durations := duration.GetDurationByTime(userId, start, end)
+	durations, _ := duration.GetDurationByTime(userId, start, end)
 	summary := v1.Summary{}
 	summary.Data = v1.SummaryData{}
 	// prepare summary data

@@ -4,6 +4,7 @@ import (
 	"WakaTImeGo/config"
 	"WakaTImeGo/constant"
 	"WakaTImeGo/model/entity"
+	"WakaTImeGo/service/duration"
 	"WakaTImeGo/service/userService"
 	"crypto/md5"
 	"encoding/base64"
@@ -77,7 +78,7 @@ func Authorize() gin.HandlerFunc {
 }
 
 func ServiceWithoutAuth(c *gin.Context) {
-
+	duration.GenericUserDuration("1")
 }
 
 func ServiceWithAuth(c *gin.Context) {

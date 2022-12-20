@@ -53,3 +53,13 @@ func (d *Duration) Update() error {
 	}
 	return nil
 }
+
+// Delete a Duration in database
+func (d *Duration) Delete() error {
+	db := database.GetDb()
+	err := db.Delete(d).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
