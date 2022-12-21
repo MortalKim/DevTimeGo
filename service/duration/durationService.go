@@ -4,6 +4,7 @@ import (
 	"WakaTImeGo/basic/database"
 	"WakaTImeGo/model/entity"
 	"WakaTImeGo/service/heartbeat"
+	"WakaTImeGo/utils"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 	"time"
@@ -32,7 +33,10 @@ func GenericUserDuration(userID string) {
 		return
 	}
 	//Get user's Durations by heartbeats time
-	durations, isEmpty := GetDurationByTime(userID, heartbeats[0].Time, heartbeats[len(heartbeats)-1].Time)
+	//Get duration of first heartbeat time's day start time, to last heartbeat time's day end time
+	startTime, _ := utils.GetDayTime(heartbeats[0].Time)
+	_, endTime := utils.GetDayTime(heartbeats[len(heartbeats)-1].Time)
+	durations, isEmpty := GetDurationByTime(userID, startTime, endTime)
 
 	//When durations updated, maybe some duration has out of date, so we need to delete it
 	toDeleteDurations := make([]entity.Duration, 0)

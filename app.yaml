@@ -7,11 +7,11 @@ handlers:
   script: _go_app
 
 database:
-  host: 192.168.1.19
+  host: 192.168.244.140
   port: 3306
   username: root
   password: root
-  dbName: wakatimekt
+  dbName: devtimego
 
 redis:
   host: 192.168.244.140

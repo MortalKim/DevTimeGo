@@ -2,6 +2,7 @@ package userController
 
 import (
 	"WakaTImeGo/config"
+	"WakaTImeGo/constant"
 	"WakaTImeGo/model/entity"
 	"WakaTImeGo/model/entity/request"
 	"WakaTImeGo/model/entity/response"
@@ -14,7 +15,17 @@ import (
 )
 
 func Auth(c *gin.Context) {
-	c.JSON(http.StatusOK, nil)
+	//get user info by token
+	userId := c.Request.Header.Get(constant.DECRYPTED_USER_ID)
+	user, err := userService.GetUserById(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+	userInfo := make(map[string]interface{})
+	userInfo["username"] = user.UserName
+	userInfo["email"] = user.Email
+	c.JSON(http.StatusOK, userInfo)
 }
 
 func Login(c *gin.Context) {

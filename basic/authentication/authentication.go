@@ -59,6 +59,7 @@ func Authorize() gin.HandlerFunc {
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
+			c.Request.Header.Add(constant.DECRYPTED_USER_ID, strconv.Itoa(int(jwtStruct.UserID)))
 			if _, ok := token.Claims.(*entity.JwtStruct); ok && token.Valid {
 				c.Next()
 			}
