@@ -15,9 +15,9 @@ import (
 
 func InitDurationRoutes(engine *gin.Engine) {
 	//init userController router
-	heartbeat := engine.Group(constant.API_V1_PREFIX)
+	duration := engine.Group(constant.API_V1_PREFIX)
 	{
-		heartbeat.POST("/api/v1/users/:user/durations", v1.SaveHeartbeats)
-		heartbeat.POST("/api/v1/users/current/durations", v1.SaveHeartbeat)
+		duration.GET("/users/:user/durations", v1.GetDurationsByParams)
+		duration.GET("/users/current/durations", v1.GetDurationsByParams)
 	}
 }

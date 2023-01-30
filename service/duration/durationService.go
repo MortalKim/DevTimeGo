@@ -3,6 +3,7 @@ package duration
 import (
 	"WakaTImeGo/basic/database"
 	"WakaTImeGo/model/entity"
+	"WakaTImeGo/model/entity/request/duration"
 	"WakaTImeGo/service/heartbeat"
 	"WakaTImeGo/utils"
 	log "github.com/sirupsen/logrus"
@@ -221,4 +222,13 @@ func getLastDurationOfTime(userID string, time time.Time) (entity.Duration, bool
 		return entity.Duration{}, false
 	}
 	return duration, true
+}
+
+func GetDurationByParams(params duration.SearchParams) []entity.Duration {
+	var durations []entity.Duration
+	timeStr := time.UnixMilli(params.Date)
+	startDate, endDate := utils.GetDayTime(timeStr)
+	database.GetDb().Where("user_id = ? AND time >= ? AND time <= ?",
+		params.UserID, startDate, endDate).Find(&durations)
+	return durations
 }

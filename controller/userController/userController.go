@@ -25,6 +25,7 @@ func Auth(c *gin.Context) {
 	userInfo := make(map[string]interface{})
 	userInfo["username"] = user.UserName
 	userInfo["email"] = user.Email
+	userInfo["userID"] = user.ID
 	c.JSON(http.StatusOK, userInfo)
 }
 

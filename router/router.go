@@ -11,6 +11,7 @@ func InitRotesNeedAuth(engine *gin.Engine) {
 	userRouter.InitUserRoutesNeedAuth(engine)
 	v1.InitTodayRoutes(engine)
 	v1.InitHeartbeatRoutes(engine)
+	v1.InitDurationRoutes(engine)
 }
 
 func InitRotesNotNeedAuth(engine *gin.Engine) {
