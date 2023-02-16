@@ -63,3 +63,19 @@ func (d *Duration) Delete() error {
 	}
 	return nil
 }
+
+// DurationVO for view
+type DurationVO struct {
+	ID              uint64    `json:"-" gorm:"primary_key; auto_increment"`
+	UserID          string    `json:"user_id" gorm:"not null; index:idx_time_user; index:idx_user_project"`
+	Time            time.Time `json:"time" hash:"ignore"`
+	Duration        float64   `json:"duration" hash:"ignore"`
+	Category        string    `json:"category" hash:"ignore"`
+	Project         string    `json:"project"`
+	Language        string    `json:"language"`
+	Editor          string    `json:"editor"`
+	OperatingSystem string    `json:"operating_system"`
+	Machine         string    `json:"machine"`
+	Branch          string    `json:"branch"`
+	NumHeartbeats   int       `json:"-" hash:"ignore"`
+}

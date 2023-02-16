@@ -224,11 +224,10 @@ func getLastDurationOfTime(userID string, time time.Time) (entity.Duration, bool
 	return duration, true
 }
 
-func GetDurationByParams(params duration.SearchParams) []entity.Duration {
-	var durations []entity.Duration
+func GetDurationByParams(params duration.SearchParams) []entity.DurationVO {
+	var durations []entity.DurationVO
 	timeStr := time.UnixMilli(params.Date)
 	startDate, endDate := utils.GetDayTime(timeStr)
-	database.GetDb().Where("user_id = ? AND time >= ? AND time <= ?",
-		params.UserID, startDate, endDate).Find(&durations)
+	database.GetDb().Raw("select user_id, time, duration / 1000000000 as duration, category, project, language, editor, operating_system, machine, branch from durations where user_id = ? AND time >= ? AND time <= ?", params.UserID, startDate, endDate).Find(&durations)
 	return durations
 }
